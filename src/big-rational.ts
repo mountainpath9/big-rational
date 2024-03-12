@@ -142,8 +142,8 @@ export class BigRational {
         const s = m[1] == '-' ? -1n : 1n;
         const intval = m[2] ? BigInt(m[2]) : 0n;
         const fracval = m[3] ? BigInt(m[3]) : 0n;
-        const denom = m[3] ? 10n ** BigInt(m[3].length): 1n;
-        return new BigRational( s * (intval * denom + fracval), denom);
+        const denom = m[3] ? 10n ** BigInt(m[3].length) : 1n;
+        return new BigRational(s * (intval * denom + fracval), denom);
       }
     }
     return null;
