@@ -1,7 +1,8 @@
 {
   "name": "@mountainpath9/big-rational",
-  "url": "https://github.com/mountainpath9/big-rational",
   "version": "0.1.0",
+  "license": "MIT",
+  "url": "https://github.com/mountainpath9/big-rational",
   "main": "index.js",
   "types": "index.js.ts",
   "license": "AGPL-3.0-or-later",
@@ -9,8 +10,7 @@
   "scripts": {
     "clean": "rm -rf dist",
     "build": "yarn clean && yarn tsc && yarn tsc-alias -p tsconfig.json && cp package.json README.md dist",
-    "test": "yarn vitest run",
-    "publish": "yarn && yarn build && cd dist && npm publish --access=public"
+    "test": "yarn vitest run"
   },
   "devDependencies": {
     "@types/node": "^20.11.26",
