@@ -2,6 +2,9 @@ export class BigRational {
   numerator: bigint;
   denominator: bigint;
 
+  /**
+   *  BigRationals are normalized on construction
+   */  
   private constructor(numerator: bigint, denominator: bigint) {
     if (denominator == 0n) {
       throw new RangeError("BigRational division by zero");
@@ -14,6 +17,16 @@ export class BigRational {
     this.denominator = denominator / gcd;
   }
 
+  /**
+   *  Creates a new BigRational for the given ratio
+   */
+  static from(numerator: bigint, denominator: bigint): BigRational {
+    return new BigRational(numerator, denominator);
+  }
+
+  /**
+   *  Returns a new BigRational that is the sum of this and other
+   */
   add(other: BigRational): BigRational {
     return new BigRational(
       this.numerator * other.denominator + other.numerator * this.denominator,
@@ -21,6 +34,9 @@ export class BigRational {
     );
   }
 
+  /**
+   *  Returns a new BigRational that is the difference between this and other
+   */
   sub(other: BigRational): BigRational {
     return new BigRational(
       this.numerator * other.denominator - other.numerator * this.denominator,
@@ -28,6 +44,9 @@ export class BigRational {
     );
   }
 
+  /**
+   *  Returns a new BigRational that is the product of this and other
+   */
   mul(other: BigRational): BigRational {
     return new BigRational(
       this.numerator * other.numerator,
@@ -35,6 +54,9 @@ export class BigRational {
     );
   }
 
+  /**
+   *  Returns a new BigRational that is the quotient of this and other
+   */
   div(other: BigRational): BigRational {
     return new BigRational(
       this.numerator * other.denominator,
@@ -42,9 +64,11 @@ export class BigRational {
     );
   }
 
-  // Round this value such that it ends up with the specified denominator.
-  // eg if newDenominator is 1, then will round to the nearest it. If newDeominator is 100
-  // then will round to 2 decimal places.
+  /**
+   * Round this value such that it ends up with the specified denominator.
+   * eg if newDenominator is 1, then will round to the nearest int. If newDenominator is 100
+   * then will round to 2 decimal places.
+   */
   round(newDenominator: bigint, mode: RoundMode): BigRational {
     const s = this.sign();
     const v = this.abs();
@@ -69,46 +93,80 @@ export class BigRational {
 
   }
 
+  /**
+   * Returns -1n if this is negative, 1n otherwise
+   */
   sign(): bigint {
     return this.numerator > 0n ? 1n : -1n;
   }
 
+  /**
+   * Returns a new BigRational that is the absolute value of this
+   */
   abs(): BigRational {
     return BigRational.from(absbi(this.numerator), this.denominator);
   }
 
+  /**
+   * Returns a new BigRational that is this value negated
+   */
   neg(): BigRational {
     return BigRational.from(-this.numerator, this.denominator);
   }
 
+  /**
+   * Returns true if this is equal to other
+   */
   eq(other: BigRational): boolean {
     return this.numerator === other.numerator && this.denominator === other.denominator;
   }
 
+  /**
+   * Returns true if this is not equal to other
+   */
   neq(other: BigRational): boolean {
     return !this.eq(other);
   }
 
+  /**
+   * Returns true if this is less than other
+   */
   lt(other: BigRational): boolean {
     return this.numerator * other.denominator < other.numerator * this.denominator;
   }
 
+  /**
+   * Returns true if this is less than or equal to other
+   */
   lte(other: BigRational): boolean {
     return this.numerator * other.denominator <= other.numerator * this.denominator;
   }
 
+  /**
+   * Returns true if this is greater than other
+   */
   gt(other: BigRational): boolean {
     return !this.lte(other);
   }
 
+  /**
+   * Returns true if this is greater than or equal to other
+   */
   gte(other: BigRational): boolean {
     return !this.lt(other);
   }
 
+  /**
+   * Returns a string representing the exact value of this
+   */
   toString(): string {
     return `${this.numerator}/${this.denominator}`;
   }
 
+  /**
+   * Returns a string that is a decimal approximation to this,
+   * correct to the specified number of decimal places
+   */
   toDecimalString(decimals: number): string {
     const neg = this.numerator < 0;
     const scale = 10n ** BigInt(decimals);
@@ -132,6 +190,9 @@ export class BigRational {
     return s;
   }
 
+  /**
+   * Returns a BigRational from parsing a decimal string
+   */
   static fromDecimalString(s: string): BigRational | null {
     {
       const m = s.match(DECIMAL_RE);
@@ -149,31 +210,40 @@ export class BigRational {
     return null;
   }
 
-  static from(numerator: bigint, denominator: bigint): BigRational {
-    return new BigRational(numerator, denominator);
-  }
-
-  // Construct a rational from a number, with specified decimals
+  /**
+   * Constructs a BigRational from a floating point number, using the specified specified decimals places
+   */
   static fromNumber(v: number, decimals: number): BigRational {
     return BigRational.from(BigInt(Math.floor(v * 10 ** decimals)), 10n ** BigInt(decimals));
   }
 
+  /**
+   * Constructs a BigRational from a bigint scaled by the given number of decimals
+   */
   static fromBigIntWithDecimals(value: bigint, decimals: bigint): BigRational {
     const scale = 10n ** decimals;
     return new BigRational(value, scale);
   }
 
-  // This rounds down
+  /**
+   * Returns a bigint that approximates this BigRational scaled by the given number of decimal
+   * places. Rounds down.
+   */
   toBigIntWithDecimals(decimals: bigint): bigint {
     const scale = 10n ** decimals;
     return this.numerator * scale / this.denominator;
   }
 
+  /**
+   * Cosntructs a BigRation from a biging scaled by the given factor
+   */
   static fromScaledBigInt(value: bigint, scale: bigint): BigRational {
     return new BigRational(value, scale);
   }
 
-  // This rounds down
+  /**
+   * Returns a bigint that approximates this BigRational scaled by the given factor. Rounds down.
+   */
   toScaledBigInt(scale: bigint): bigint {
     return this.numerator * scale / this.denominator;
   }
