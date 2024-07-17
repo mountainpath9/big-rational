@@ -1,12 +1,15 @@
 {
   "name": "@mountainpath9/big-rational",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "license": "MIT",
   "url": "https://github.com/mountainpath9/big-rational",
   "main": "index.js",
   "types": "index.js.ts",
-  "license": "AGPL-3.0-or-later",
   "private": false,
+  "repository": {
+     "type": "git",
+     "url": "git+https://github.com/mountainpath9/big-rational.git"
+  },
   "scripts": {
     "clean": "rm -rf dist",
     "build": "yarn clean && yarn tsc && yarn tsc-alias -p tsconfig.json && cp package.json README.md dist",
