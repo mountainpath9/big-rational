@@ -4,7 +4,7 @@ export class BigRational {
 
   /**
    *  BigRationals are normalized on construction
-   */  
+   */
   private constructor(numerator: bigint, denominator: bigint) {
     if (denominator == 0n) {
       throw new RangeError("BigRational division by zero");
@@ -154,6 +154,21 @@ export class BigRational {
    */
   gte(other: BigRational): boolean {
     return !this.lt(other);
+  }
+
+  /**
+   * Returns:
+   *   -1 if this is less than other,
+   *    1 if this is greater than other,
+   *    0 if this is equal to other
+   */
+  cmp(other: BigRational): number {
+    if (this.lt(other)) {
+      return -1;
+    } else if (other.lt(this)) {
+      return 1;
+    }
+    return 0;
   }
 
   /**

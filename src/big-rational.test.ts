@@ -244,6 +244,40 @@ test('less than or equal', () => {
   }
 })
 
+test('cmp', () => {
+  {
+    const x = br(1, 2);
+    const y = br(1, 2);
+    expect(x.cmp(y)).toBe(0);
+  }
+  {
+    const x = br(-1, 2);
+    const y = br(-1, 2);
+    expect(x.cmp(y)).toBe(0);
+  }
+  {
+    const x = br(-1, 2);
+    const y = br(1, 2);
+    expect(x.cmp(y)).toBe(-1);
+  }
+  {
+    const x = br(1, 2);
+    const y = br(-1, 2);
+    expect(x.cmp(y)).toBe(1);
+  }
+
+  {
+    const x = br(3, 8);
+    const y = br(1, 2);
+    expect(x.cmp(y)).toBe(-1);
+  }
+  {
+    const x = br(1, 2);
+    const y = br(3, 8);
+    expect(x.cmp(y)).toBe(1);
+  }
+})
+
 test('rounding', () => {
   {
     const x = br(100, 3);
