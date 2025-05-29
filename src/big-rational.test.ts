@@ -348,6 +348,27 @@ test('from decimal string', () => {
   expectBrEq(BigRational.fromDecimalString('-23.0')!, br(-23, 1));
 });
 
+test('from number', () => {
+  expectBrEq(BigRational.fromNumber(0), BigRational.ZERO);
+  expectBrEq(BigRational.fromNumber(1), BigRational.ONE);
+  expectBrEq(BigRational.fromNumber(-1), br(-1,1));
+  expectBrEq(BigRational.fromNumber(1.5), br(3,2));
+  expectBrEq(BigRational.fromNumber(-1.5), br(-3,2));
+  expectBrEq(BigRational.fromNumber(2), BigRational.TWO);
+  expectBrEq(BigRational.fromNumber(-2), br(-2,1));
+  expectBrEq(BigRational.fromNumber(0.5), BigRational.ONE_HALF);
+  expectBrEq(BigRational.fromNumber(10), BigRational.TEN);
+  expectBrEq(BigRational.fromNumber(100), BigRational.ONE_HUNDRED);
+  expectBrEq(BigRational.fromNumber(1000), BigRational.ONE_THOUSAND);
+  expectBrEq(BigRational.fromNumber(10000), BigRational.TEN_THOUSAND);
+
+  // The fun of binary floating point
+  expectBrEq(BigRational.fromNumber(0.1), BigRational.from(3602879701896397n,36028797018963968n));
+  expectBrEq(BigRational.fromNumber(-0.1), BigRational.from(-3602879701896397n,36028797018963968n));
+
+  expectBrEq(BigRational.fromNumber(0.1).round(10n, RoundMode.DOWN), br(1,10));
+});
+
 
 function br(n: number, d: number): BigRational {
   return BigRational.from(BigInt(n), BigInt(d));

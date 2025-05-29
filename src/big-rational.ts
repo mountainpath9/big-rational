@@ -1,3 +1,6 @@
+import { getNumberParts } from "./number";
+import { MAX_MANTISSA, MAX_MANTISSA_BI } from "./number.test";
+
 export class BigRational {
   numerator: bigint;
   denominator: bigint;
@@ -226,10 +229,24 @@ export class BigRational {
   }
 
   /**
-   * Constructs a BigRational from a floating point number, using the specified specified decimals places
+   * Constructs a BigRational from a floating point number, keeping available precision
    */
-  static fromNumber(v: number, decimals: number): BigRational {
-    return BigRational.from(BigInt(Math.floor(v * 10 ** decimals)), 10n ** BigInt(decimals));
+  static fromNumber(v: number): BigRational {
+    const parts = getNumberParts(v);
+
+    if (parts.mantissa === 0 && parts.biasedExponent === -1023) {
+      return BigRational.ZERO;
+    }
+
+    const sign = BigRational.from(parts.sign == 0 ? 1n: -1n, 1n);
+    const scale = parts.biasedExponent >= 0
+      ? BigRational.from( 2n ** BigInt(parts.biasedExponent), 1n)
+      : BigRational.from( 1n, 2n ** BigInt(-parts.biasedExponent))
+    const result =
+      BigRational.ONE.add(
+        BigRational.from(BigInt(parts.mantissa), MAX_MANTISSA_BI)
+      ).mul(scale).mul(sign);
+    return result;
   }
 
   /**
