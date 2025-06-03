@@ -250,6 +250,13 @@ export class BigRational {
   }
 
   /**
+   * Constructs a BigRational from a floating point number, using the specified specified decimals places
+   */
+  static fromRoundedNumber(v: number, decimalPrecision: number): BigRational {
+    return BigRational.from(BigInt(Math.floor(v * 10 ** decimalPrecision)), 10n ** BigInt(decimalPrecision));
+  }
+
+  /**
    * Constructs a BigRational from a bigint scaled by the given number of decimals
    */
   static fromBigIntWithDecimals(value: bigint, decimals: bigint): BigRational {
