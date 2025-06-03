@@ -1,5 +1,5 @@
 import { getNumberParts } from "./number";
-import { MAX_MANTISSA, MAX_MANTISSA_BI } from "./number.test";
+import { MAX_MANTISSA_BI } from "./number";
 
 export class BigRational {
   numerator: bigint;

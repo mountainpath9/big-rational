@@ -36,3 +36,6 @@ export function getNumberParts(x: number): NumberParts {
     mantissa: Number(BigInt(asDouble[0]) - 2n ** 52n)
   };
 }
+
+export const MAX_MANTISSA = 2**52;
+export const MAX_MANTISSA_BI = BigInt(2**52);

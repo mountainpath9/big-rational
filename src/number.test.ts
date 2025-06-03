@@ -1,5 +1,5 @@
 import { expect, test } from 'vitest'
-import { getNumberParts } from './number';
+import { MAX_MANTISSA, getNumberParts } from './number';
 
 test('parts', () => {
   // not exactly comprehensive
@@ -54,6 +54,3 @@ test('parts', () => {
     expect(parts.biasedExponent).toBe(-1);
   }
 });
-
-export const MAX_MANTISSA = 2**52;
-export const MAX_MANTISSA_BI = BigInt(2**52);
