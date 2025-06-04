@@ -96,6 +96,37 @@ export class BigRational {
 
   }
 
+
+  /**
+   * Raise this value to the given integer power
+   */
+  pow(exponent: bigint): BigRational {
+    if (exponent === 0n) {
+      return BigRational.ONE;
+    }
+
+    if (exponent < 0n) {
+      // For negative exponents, compute 1 / (base^|exponent|)
+      const positiveResult = this.pow(-exponent);
+      return BigRational.ONE.div(positiveResult);
+    }
+
+    // Fast exponentiation by squaring
+    let result = BigRational.ONE;
+    let base: BigRational = this;
+    let exp = exponent;
+
+    while (exp > 0n) {
+      if (exp % 2n === 1n) {
+        result = result.mul(base);
+      }
+      base = base.mul(base);
+      exp = exp / 2n;
+    }
+
+    return result;
+  }
+
   /**
    * Returns -1n if this is negative, 1n otherwise
    */
@@ -182,6 +213,13 @@ export class BigRational {
   }
 
   /**
+   * Returns the closest number to this value
+   */
+  toNumber(): number {
+    return Number(this.numerator) / Number(this.denominator);
+  }
+
+  /**
    * Returns a string that is a decimal approximation to this,
    * correct to the specified number of decimal places
    */
@@ -209,9 +247,10 @@ export class BigRational {
   }
 
   /**
-   * Returns a BigRational from parsing a decimal string
+   * Returns a BigRational from parsing a decimal string, or null
+   * if string is invalid
    */
-  static fromDecimalString(s: string): BigRational | null {
+  static parseDecimalString(s: string): BigRational | null {
     {
       const m = s.match(DECIMAL_RE);
       if (m) {
@@ -229,6 +268,19 @@ export class BigRational {
   }
 
   /**
+   * Returns a BigRational from parsing a decimal string. Throws
+   * an Error if the string is invalid
+   */
+  static fromDecimalString(s: string): BigRational {
+    const v = BigRational.parseDecimalString(s);
+    if (v === null) {
+      // error consistent with BigInt
+      throw new SyntaxError(`Cannot convert ${s} to a BigRational`);
+    }
+    return v;
+  }
+
+  /**
    * Constructs a BigRational from a floating point number, keeping available precision
    */
   static fromNumber(v: number): BigRational {
@@ -238,10 +290,10 @@ export class BigRational {
       return BigRational.ZERO;
     }
 
-    const sign = BigRational.from(parts.sign == 0 ? 1n: -1n, 1n);
+    const sign = BigRational.from(parts.sign == 0 ? 1n : -1n, 1n);
     const scale = parts.biasedExponent >= 0
-      ? BigRational.from( 2n ** BigInt(parts.biasedExponent), 1n)
-      : BigRational.from( 1n, 2n ** BigInt(-parts.biasedExponent))
+      ? BigRational.from(2n ** BigInt(parts.biasedExponent), 1n)
+      : BigRational.from(1n, 2n ** BigInt(-parts.biasedExponent))
     const result =
       BigRational.ONE.add(
         BigRational.from(BigInt(parts.mantissa), MAX_MANTISSA_BI)

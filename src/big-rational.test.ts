@@ -330,32 +330,32 @@ test('to decimal string', () => {
 });
 
 test('from decimal string', () => {
-  expect(BigRational.fromDecimalString('')).toBeNull();
-  expect(BigRational.fromDecimalString('.')).toBeNull();
-  expect(BigRational.fromDecimalString('-')).toBeNull();
-  expect(BigRational.fromDecimalString('-.')).toBeNull();
-  expectBrEq(BigRational.fromDecimalString('14')!, br(14, 1));
-  expectBrEq(BigRational.fromDecimalString('14.')!, br(14, 1));
-  expectBrEq(BigRational.fromDecimalString('-14')!, br(-14, 1));
-  expectBrEq(BigRational.fromDecimalString('-14.')!, br(-14, 1));
-  expectBrEq(BigRational.fromDecimalString('.14')!, br(14, 100));
-  expectBrEq(BigRational.fromDecimalString('-.14')!, br(-14, 100));
-  expectBrEq(BigRational.fromDecimalString('0.14')!, br(14, 100));
-  expectBrEq(BigRational.fromDecimalString('-0.14')!, br(-14, 100));
-  expectBrEq(BigRational.fromDecimalString('23.14')!, br(2314, 100));
-  expectBrEq(BigRational.fromDecimalString('-23.14')!, br(-2314, 100));
-  expectBrEq(BigRational.fromDecimalString('23.0')!, br(23, 1));
-  expectBrEq(BigRational.fromDecimalString('-23.0')!, br(-23, 1));
+  expect(BigRational.parseDecimalString('')).toBeNull();
+  expect(BigRational.parseDecimalString('.')).toBeNull();
+  expect(BigRational.parseDecimalString('-')).toBeNull();
+  expect(BigRational.parseDecimalString('-.')).toBeNull();
+  expectBrEq(BigRational.parseDecimalString('14')!, br(14, 1));
+  expectBrEq(BigRational.parseDecimalString('14.')!, br(14, 1));
+  expectBrEq(BigRational.parseDecimalString('-14')!, br(-14, 1));
+  expectBrEq(BigRational.parseDecimalString('-14.')!, br(-14, 1));
+  expectBrEq(BigRational.parseDecimalString('.14')!, br(14, 100));
+  expectBrEq(BigRational.parseDecimalString('-.14')!, br(-14, 100));
+  expectBrEq(BigRational.parseDecimalString('0.14')!, br(14, 100));
+  expectBrEq(BigRational.parseDecimalString('-0.14')!, br(-14, 100));
+  expectBrEq(BigRational.parseDecimalString('23.14')!, br(2314, 100));
+  expectBrEq(BigRational.parseDecimalString('-23.14')!, br(-2314, 100));
+  expectBrEq(BigRational.parseDecimalString('23.0')!, br(23, 1));
+  expectBrEq(BigRational.parseDecimalString('-23.0')!, br(-23, 1));
 });
 
 test('from number', () => {
   expectBrEq(BigRational.fromNumber(0), BigRational.ZERO);
   expectBrEq(BigRational.fromNumber(1), BigRational.ONE);
-  expectBrEq(BigRational.fromNumber(-1), br(-1,1));
-  expectBrEq(BigRational.fromNumber(1.5), br(3,2));
-  expectBrEq(BigRational.fromNumber(-1.5), br(-3,2));
+  expectBrEq(BigRational.fromNumber(-1), br(-1, 1));
+  expectBrEq(BigRational.fromNumber(1.5), br(3, 2));
+  expectBrEq(BigRational.fromNumber(-1.5), br(-3, 2));
   expectBrEq(BigRational.fromNumber(2), BigRational.TWO);
-  expectBrEq(BigRational.fromNumber(-2), br(-2,1));
+  expectBrEq(BigRational.fromNumber(-2), br(-2, 1));
   expectBrEq(BigRational.fromNumber(0.5), BigRational.ONE_HALF);
   expectBrEq(BigRational.fromNumber(10), BigRational.TEN);
   expectBrEq(BigRational.fromNumber(100), BigRational.ONE_HUNDRED);
@@ -363,12 +363,41 @@ test('from number', () => {
   expectBrEq(BigRational.fromNumber(10000), BigRational.TEN_THOUSAND);
 
   // The fun of binary floating point
-  expectBrEq(BigRational.fromNumber(0.1), BigRational.from(3602879701896397n,36028797018963968n));
-  expectBrEq(BigRational.fromNumber(-0.1), BigRational.from(-3602879701896397n,36028797018963968n));
+  expectBrEq(BigRational.fromNumber(0.1), BigRational.from(3602879701896397n, 36028797018963968n));
+  expectBrEq(BigRational.fromNumber(-0.1), BigRational.from(-3602879701896397n, 36028797018963968n));
 
-  expectBrEq(BigRational.fromNumber(0.1).round(10n, RoundMode.DOWN), br(1,10));
+  expectBrEq(BigRational.fromNumber(0.1).round(10n, RoundMode.DOWN), br(1, 10));
 });
 
+test('to number', () => {
+  expect(BigRational.ZERO.toNumber()).toBe(0);
+  expect(BigRational.ONE.toNumber()).toBe(1);
+  expect(br(-1,1).toNumber()).toBe(-1);
+  expect(br(1,10).toNumber()).toBeCloseTo(0.1);
+  expect(br(1,3).toNumber()).toBeCloseTo(0.3333333333);
+  expect(br(-1,3).toNumber()).toBeCloseTo(-0.3333333333);
+  expect(br(10,3).toNumber()).toBeCloseTo(3.3333333333);
+  expect(br(-10,3).toNumber()).toBeCloseTo(-3.3333333333);
+});
+
+test('power', () => {
+  const result = BigRational.fromNumber(2).pow(3n);
+  expect(result).toEqual(BigRational.fromNumber(8));
+
+  const result2 = BigRational.fromNumber(2).pow(-3n);
+  expect(result2).toEqual(
+    BigRational.fromNumber(1).div(BigRational.fromNumber(8))
+  );
+
+  const result3 = BigRational.fromNumber(2).pow(0n);
+  expect(result3).toEqual(BigRational.ONE);
+
+  const result4 = BigRational.fromNumber(2).pow(1n);
+  expect(result4).toEqual(BigRational.fromNumber(2));
+
+  const result5 = BigRational.fromNumber(2).pow(2n);
+  expect(result5).toEqual(BigRational.fromNumber(4));
+});
 
 function br(n: number, d: number): BigRational {
   return BigRational.from(BigInt(n), BigInt(d));
