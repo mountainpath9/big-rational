@@ -274,7 +274,8 @@ export class BigRational {
   static fromDecimalString(s: string): BigRational {
     const v = BigRational.parseDecimalString(s);
     if (v === null) {
-      throw new Error("BigRational requires a decimal string");
+      // error consistent with BigInt
+      throw new SyntaxError(`Cannot convert ${s} to a BigRational`);
     }
     return v;
   }
