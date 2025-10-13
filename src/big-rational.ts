@@ -223,7 +223,9 @@ export class BigRational {
    * Returns a string that is a decimal approximation to this,
    * correct to the specified number of decimal places
    */
-  toDecimalString(decimals: number): string {
+  toDecimalString(decimals: number, opts?: {
+    thousandsSeparator: string
+  }): string {
     const neg = this.numerator < 0;
     const scale = 10n ** BigInt(decimals);
     const numerator = absbi(this.numerator);
@@ -241,9 +243,12 @@ export class BigRational {
     const rss = rs.toString();
     const zpad = decimals - rss.length;
 
+    const sep = opts?.thousandsSeparator; 
+    const qs = sep ? stringWithThousandsSeparator(q.toString(), sep) : q.toString();
+
     let s = "";
     s += neg ? "-" : "";
-    s += q.toString();
+    s += qs;
     if (decimals > 0) {
       s += ".";
       s += zpad > 0 ? '0'.repeat(zpad) : '';
@@ -382,3 +387,19 @@ export enum RoundMode {
   DOWN,
   UP,
 }
+
+function stringWithThousandsSeparator(s: string, sep: string) {
+  const chunks: string[] = [];
+  const n = 3;
+
+  let end = s.length;
+  let start = end - n;
+  while (end > 0) {
+    chunks.push(s.substring(start < 0 ? 0 : start, end));
+    end -= n;
+    start -= n;
+  }
+
+  return chunks.reverse().join(sep);
+}
+

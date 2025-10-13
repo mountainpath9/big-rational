@@ -313,6 +313,8 @@ test('to scaled bigint', () => {
 })
 
 test('to decimal string', () => {
+  const sep = {thousandsSeparator:','};
+  
   expect(br(3, 1).toDecimalString(0)).toEqual('3');
   expect(br(3, 1).toDecimalString(1)).toEqual('3.0');
   expect(br(3, 1).toDecimalString(4)).toEqual('3.0000');
@@ -335,6 +337,14 @@ test('to decimal string', () => {
   expect(br(155554, 100000).toDecimalString(4)).toEqual('1.5555');
   expect(br(155556, 100000).toDecimalString(4)).toEqual('1.5556');
   expect(br(155555, 100000).toDecimalString(4)).toEqual('1.5556');
+
+  
+  expect(br(123456789, 1000000).toDecimalString(3)).toEqual('123.457');
+  expect(br(123456789, 1000000).toDecimalString(3, sep)).toEqual('123.457');
+  expect(br(123456789, 10).toDecimalString(2)).toEqual('12345678.90');
+  expect(br(123456789, 10).toDecimalString(2, sep)).toEqual('12,345,678.90');
+  expect(br(-123456789, 10).toDecimalString(2)).toEqual('-12345678.90');
+  expect(br(-123456789, 10).toDecimalString(2, sep)).toEqual('-12,345,678.90');
 });
 
 test('from decimal string', () => {
