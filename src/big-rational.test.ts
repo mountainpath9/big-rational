@@ -313,13 +313,21 @@ test('to scaled bigint', () => {
 })
 
 test('to decimal string', () => {
+  expect(br(3, 1).toDecimalString(0)).toEqual('3');
+  expect(br(3, 1).toDecimalString(1)).toEqual('3.0');
   expect(br(3, 1).toDecimalString(4)).toEqual('3.0000');
   expect(br(3, 2).toDecimalString(4)).toEqual('1.5000');
+  expect(br(5, 3).toDecimalString(0)).toEqual('2');
+  expect(br(5, 3).toDecimalString(1)).toEqual('1.7');
   expect(br(5, 3).toDecimalString(4)).toEqual('1.6667');
   expect(br(1, 2).toDecimalString(4)).toEqual('0.5000');
   expect(br(1, 20).toDecimalString(4)).toEqual('0.0500');
+  expect(br(-3, 1).toDecimalString(0)).toEqual('-3');
+  expect(br(-3, 1).toDecimalString(1)).toEqual('-3.0');
   expect(br(-3, 1).toDecimalString(4)).toEqual('-3.0000');
   expect(br(-3, 2).toDecimalString(4)).toEqual('-1.5000');
+  expect(br(-5, 3).toDecimalString(0)).toEqual('-2');
+  expect(br(-5, 3).toDecimalString(1)).toEqual('-1.7');
   expect(br(-5, 3).toDecimalString(4)).toEqual('-1.6667');
   expect(br(-1, 2).toDecimalString(4)).toEqual('-0.5000');
   expect(br(-1, 20).toDecimalString(4)).toEqual('-0.0500');

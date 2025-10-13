@@ -227,11 +227,16 @@ export class BigRational {
     const neg = this.numerator < 0;
     const scale = 10n ** BigInt(decimals);
     const numerator = absbi(this.numerator);
-    const q = numerator / this.denominator;
+    let q = numerator / this.denominator;
     const r = numerator % this.denominator;
     let rs = r * scale / this.denominator;
     if ((r * scale * 10n / this.denominator) % 10n >= 5n) {
-      rs += 1n;
+      // We are rounding away from zero
+      if (decimals > 0) {
+        rs += 1n;
+      } else {
+        q += 1n;
+      }
     }
     const rss = rs.toString();
     const zpad = decimals - rss.length;
@@ -239,9 +244,11 @@ export class BigRational {
     let s = "";
     s += neg ? "-" : "";
     s += q.toString();
-    s += ".";
-    s += zpad > 0 ? '0'.repeat(zpad) : '';
-    s += rss;
+    if (decimals > 0) {
+      s += ".";
+      s += zpad > 0 ? '0'.repeat(zpad) : '';
+      s += rss;
+    }
 
     return s;
   }
