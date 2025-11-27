@@ -169,14 +169,15 @@ console.log(sum.eq(BigRational.from(5n, 6n)));
 ## build and test
 
 ```
-yarn
-yarn build
-yarn test
+pnpm install
+pnpm build
+pnpm test
 ```
 
 ## publish
 
 ```
-yarn build
-(cd dist; npm publish --access=public)
+pnpm install
+pnpm build
+pnpm publish --access public
 ```
