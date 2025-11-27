@@ -417,6 +417,25 @@ test('power', () => {
   expect(result5).toEqual(BigRational.fromNumber(4));
 });
 
+
+test('min', () => {
+  expectBrEq(BigRational.min(BigRational.ONE, BigRational.ONE), BigRational.ONE);
+  expectBrEq(BigRational.min(BigRational.ONE, BigRational.TEN), BigRational.ONE);
+  expectBrEq(BigRational.min(BigRational.TEN, BigRational.ONE), BigRational.ONE);
+});
+
+test('max', () => {
+  expectBrEq(BigRational.max(BigRational.ONE, BigRational.ONE), BigRational.ONE);
+  expectBrEq(BigRational.max(BigRational.ONE, BigRational.TEN), BigRational.TEN);
+  expectBrEq(BigRational.max(BigRational.TEN, BigRational.ONE), BigRational.TEN);
+});
+
+test('cmp', () => {
+  expect(BigRational.cmp(BigRational.ONE, BigRational.ONE)).toEqual(0);
+  expect(BigRational.cmp(BigRational.ONE, BigRational.TEN)).toEqual(-1);
+  expect(BigRational.cmp(BigRational.TEN, BigRational.ONE)).toEqual(1);
+});
+
 function br(n: number, d: number): BigRational {
   return BigRational.from(BigInt(n), BigInt(d));
 }

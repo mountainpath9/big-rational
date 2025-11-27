@@ -351,6 +351,38 @@ export class BigRational {
     return this.numerator * scale / this.denominator;
   }
 
+  /**
+   * Returns the smaller of two BigRationals
+   */
+  static min(v1: BigRational, v2: BigRational): BigRational {
+    return v1.lt(v2) ? v1 : v2;
+  }
+
+  /**
+   * Returns the larger of two BigRationals
+   */
+  static max(v1: BigRational, v2: BigRational): BigRational {
+    return v1.gt(v2) ? v1 : v2;
+  }
+
+  /**
+   * Returns
+   *      1 if v1 > v2
+   *     -1 if v1 < v2
+   *      0 if v1 === v2
+   */
+  static cmp(v1: BigRational, v2: BigRational): number {
+    const diff = v1.sub(v2);
+    if (diff.numerator > 0n) {
+      return 1;
+    }
+    if (diff.numerator < 0n) {
+      return -1;
+    } else {
+      return 0;
+    }
+  }
+
   static ZERO = new BigRational(0n, 1n);
   static ONE = new BigRational(1n, 1n);
   static TWO = new BigRational(2n, 1n);
