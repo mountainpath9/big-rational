@@ -1,0 +1,50 @@
+name: CI
+
+on:
+  pull_request:
+    branches: [master]
+  push:
+    branches: [master]
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    if: github.repository == 'mountainpath9/big-rational'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@008330803749db0355799c700092d9a85fd074e9 # v6.0.9
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '20.19.4'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm verify
+
+  tarball-smoke:
+    if: github.repository == 'mountainpath9/big-rational'
+    needs: verify
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: pnpm/action-setup@008330803749db0355799c700092d9a85fd074e9 # v6.0.9
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: '20.19.4'
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - name: Pack the tarball
+        run: pnpm pack --pack-destination "$RUNNER_TEMP"
+      - name: Install packed tarball into a scratch project with --ignore-scripts
+        run: |
+          set -euo pipefail
+          TARBALL="$(ls "$RUNNER_TEMP"/mountainpath9-big-rational-*.tgz | head -1)"
+          mkdir -p "$RUNNER_TEMP/consumer"
+          cd "$RUNNER_TEMP/consumer"
+          npm init -y > /dev/null
+          npm install --ignore-scripts "$TARBALL"
+          node -e "const m = require('@mountainpath9/big-rational'); if (!Object.keys(m).length) throw new Error('empty cjs exports'); console.log('cjs OK:', Object.keys(m).length, 'exports');"
+          node --input-type=module -e "import * as m from '@mountainpath9/big-rational'; if (!Object.keys(m).length) throw new Error('empty esm exports'); console.log('esm OK:', Object.keys(m).length, 'exports');"
