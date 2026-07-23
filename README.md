@@ -176,8 +176,4 @@ pnpm test
 
 ## publish
 
-```
-pnpm install
-pnpm build
-pnpm publish --access public
-```
+Automated via github actions
