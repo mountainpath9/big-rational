@@ -1,0 +1,9 @@
+# The publish pipeline's own definition — any change here pings the owner.
+# Code-owner review is intentionally NOT required in the branch ruleset while this
+# repo has a single maintainer (GitHub forbids self-approval, which would deadlock
+# the sole owner). Enable "require code owner review" in the ruleset when a
+# second maintainer exists.
+
+/.github/workflows/       @mountainpath9
+/.changeset/config.json   @mountainpath9
+/pnpm-workspace.yaml      @mountainpath9

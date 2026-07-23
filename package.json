@@ -7,9 +7,14 @@
   "module": "./lib/index.mjs",
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
-      "import": "./lib/index.mjs",
-      "require": "./lib/index.js"
+      "import": {
+        "types": "./lib/index.d.mts",
+        "default": "./lib/index.mjs"
+      },
+      "require": {
+        "types": "./lib/index.d.ts",
+        "default": "./lib/index.js"
+      }
     },
     "./package.json": "./package.json"
   },
@@ -22,13 +27,20 @@
      "type": "git",
      "url": "git+https://github.com/mountainpath9/big-rational.git"
   },
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
-    "clean": "rm -rf dist",
-    "check": "tsc --noEmit && tsup",
-    "build": "tsc --noEmit && tsup",
-    "test": "pnpm vitest run"
+    "clean": "rm -rf lib",
+    "typecheck": "tsc --noEmit",
+    "build": "tsup",
+    "test": "vitest run",
+    "attw": "attw --pack",
+    "verify": "pnpm typecheck && pnpm build && pnpm test && pnpm attw",
+    "release": "pnpm verify && changeset publish",
+    "check": "tsc --noEmit && tsup"
   },
   "devDependencies": {
+    "@arethetypeswrong/cli": "^0.18.2",
+    "@changesets/cli": "^2.29.7",
     "@types/node": "^20.11.26",
     "typescript": "^5.4.2",
     "tsup": "^8.3.6",

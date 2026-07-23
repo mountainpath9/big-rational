@@ -1,0 +1,18 @@
+# Not a workspace — but pnpm reads consumer-side settings from this file.
+
+# Freshly published versions can't enter the lockfile for this many minutes.
+# 4320 = 3 days. Compromised npm releases are typically unpublished within hours,
+# so the cooldown outwaits nearly all of them.
+minimumReleaseAge: 4320
+
+# Escape hatch: packages listed here bypass the cooldown (for urgent security
+# patches). Keep this list empty by default; document each addition in the PR
+# that adds it.
+minimumReleaseAgeExclude: []
+
+# Install-lifecycle scripts are blocked by default in pnpm 10+. Packages listed
+# here are the only ones allowed to run their build/postinstall. Keep minimal;
+# adding a package here means trusting its install script.
+# Currently empty — esbuild uses optional platform packages (@esbuild/linux-x64
+# etc.), so no explicit build script is required for tsup + esbuild.
+onlyBuiltDependencies: []
