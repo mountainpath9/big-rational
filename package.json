@@ -1,6 +1,6 @@
 {
   "name": "@mountainpath9/big-rational",
-  "version": "0.6.2",
+  "version": "0.6.3",
   "license": "MIT",
   "url": "https://github.com/mountainpath9/big-rational",
   "main": "./lib/index.js",
@@ -24,8 +24,8 @@
   "types": "./lib/index.d.ts",
   "private": false,
   "repository": {
-     "type": "git",
-     "url": "git+https://github.com/mountainpath9/big-rational.git"
+    "type": "git",
+    "url": "git+https://github.com/mountainpath9/big-rational.git"
   },
   "packageManager": "pnpm@10.14.0",
   "scripts": {
