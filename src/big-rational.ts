@@ -236,6 +236,11 @@ export class BigRational {
       // We are rounding away from zero
       if (decimals > 0) {
         rs += 1n;
+        // A fraction rounded up to `scale` carries into the integer part
+        if (rs === scale) {
+          rs = 0n;
+          q += 1n;
+        }
       } else {
         q += 1n;
       }
