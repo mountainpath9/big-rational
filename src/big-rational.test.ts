@@ -338,6 +338,16 @@ test('to decimal string', () => {
   expect(br(155556, 100000).toDecimalString(4)).toEqual('1.5556');
   expect(br(155555, 100000).toDecimalString(4)).toEqual('1.5556');
 
+  // rounding up the fraction carries into the integer part
+  expect(br(9998, 1000).toDecimalString(2)).toEqual('10.00');
+  expect(br(9995, 1000).toDecimalString(2)).toEqual('10.00');
+  expect(br(9994, 1000).toDecimalString(2)).toEqual('9.99');
+  expect(br(19999996, 10000000).toDecimalString(6)).toEqual('2.000000');
+  expect(br(99, 100).toDecimalString(1)).toEqual('1.0');
+  expect(br(-9998, 1000).toDecimalString(2)).toEqual('-10.00');
+  expect(br(9999998, 10).toDecimalString(0)).toEqual('1000000');
+  expect(br(99999995, 100).toDecimalString(1, sep)).toEqual('1,000,000.0');
+
   
   expect(br(123456789, 1000000).toDecimalString(3)).toEqual('123.457');
   expect(br(123456789, 1000000).toDecimalString(3, sep)).toEqual('123.457');
