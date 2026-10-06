@@ -19,3 +19,9 @@ updates:
     groups:
       dev-dependencies:
         dependency-type: development
+    ignore:
+      # tsup's `dts` step goes through rollup-plugin-dts, which uses the
+      # TypeScript 5 compiler API internals that TS 7 removed. Revisit when
+      # tsup supports TS 7.
+      - dependency-name: typescript
+        update-types: ["version-update:semver-major"]
